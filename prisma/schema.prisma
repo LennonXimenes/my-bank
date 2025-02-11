@@ -19,7 +19,7 @@ model User {
   name        String
   email       String      @unique
   password    String
-  birth_date  DateTime
+  birthDate  DateTime
 
   createdAt   DateTime     @default(now()) @db.Timestamp(6)
   updatedAt   DateTime     @default(now()) @db.Timestamp(6)
