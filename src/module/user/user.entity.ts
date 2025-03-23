@@ -1,8 +1,8 @@
 import { ConflictException } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
+import { randomUUID } from "crypto";
+import e from "express";
 import { env } from "process";
-import { Generate } from "src/utils/generate.utils";
-import { Validate } from "src/utils/validate.utils";
 
 interface iUser {
 	id?: string;
@@ -15,14 +15,14 @@ interface iUser {
 	deletedAt?: Date | null;
 }
 
-interface UserCreate {
+interface iUserCreate {
 	name: string;
 	email: string;
 	password: string;
 	birthDate: Date;
 }
 
-interface UserUpdate {
+interface iUserUpdate {
 	name?: string;
 	email?: string;
 	password?: string;
@@ -89,7 +89,7 @@ export class UserEntity {
 	}
 
 	setId(): void {
-		this.id = Generate.uuid();
+		this.id = randomUUID();
 	}
 	setName(name: string): void {
 		name = name.trim();
@@ -101,14 +101,11 @@ export class UserEntity {
 
 	setEmail(email: string): void {
 		email = email.toLowerCase().trim();
-		if (Validate.email(email)) {
-			this.email = email;
-		} else {
-			throw new ConflictException("email is not valid");
-		}
+		this.email = email;
 	}
 	setPassword(password: string): void {
-		if (!Validate.password(password) && !Validate.uuid(password)) {
+		const validatePass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,50}$/;
+		if (!validatePass.test(password)) {
 			throw new ConflictException(
 				"the password must be between 8 and 50 characters long, contain at least one uppercase letter, one lowercase letter, and one special character.",
 			);
@@ -119,21 +116,8 @@ export class UserEntity {
 			? password
 			: bcrypt.hashSync(password, Number(env.HASH_SALT));
 	}
-
 	setBirthDate(birthDate: Date): void {
-		if (!(birthDate instanceof Date) || isNaN(birthDate.getTime())) {
-			throw new ConflictException("Invalid birth date");
-		}
-		const today = new Date();
-		const minAgeDate = new Date(today);
-		minAgeDate.setFullYear(today.getFullYear() - 18);
-		if (birthDate > today) {
-			throw new ConflictException("birth date cannot be in the future");
-		}
-		if (birthDate > minAgeDate) {
-			throw new ConflictException("user must be at least 18 years old");
-		}
-		this.birthDate = birthDate;
+		this.birthDate = new Date(birthDate);
 	}
 	setCreatedAt(): void {
 		this.createdAt = new Date();
@@ -149,7 +133,7 @@ export class UserEntity {
 		}
 	}
 
-	create(user: UserCreate): void {
+	create(user: iUserCreate): void {
 		this.setId();
 		this.setName(user.name);
 		this.setEmail(user.email);
@@ -159,7 +143,7 @@ export class UserEntity {
 		this.setUpdatedAt();
 		this.setDeletedAt(false);
 	}
-	update(user: UserUpdate): void {
+	update(user: iUserUpdate): void {
 		this.setUpdatedAt();
 		if (user.name) this.setName(user.name);
 		if (user.email) this.setEmail(user.email);
