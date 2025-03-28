@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
+import { CreateUserDto } from "./dto/create.dto";
+import { UpdateUserDto } from "./dto/update.dto";
 import { UserRepository } from "./user.repository";
 import { UserValidator } from "./user.validator";
-import { CreateUserDto } from "./create.dto";
 
 @Injectable()
 export class UserService {
@@ -18,6 +19,21 @@ export class UserService {
 		);
 
 		return this.repository.createUser({
+			...dto,
+			birthDate: formattedBirthDate,
+		});
+	}
+
+	async updateUser(id: string, dto: UpdateUserDto) {
+		await this.validator.verifyExists(id);
+
+		await this.validator.validateEmail(dto.email, id);
+
+		const formattedBirthDate = await this.validator.validateBirthDate(
+			dto.birthDate,
+		);
+
+		return this.repository.updateUser(id, {
 			...dto,
 			birthDate: formattedBirthDate,
 		});

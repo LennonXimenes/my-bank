@@ -2,9 +2,9 @@ import {
 	BadRequestException,
 	ConflictException,
 	Injectable,
+	NotFoundException,
 } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import e from "express";
 import { UserRepository } from "./user.repository";
 
 @Injectable()
@@ -40,18 +40,27 @@ export class UserValidator {
 		return formattedDate;
 	}
 
-	async validateEmail(email: string) {
-		const foundEmail = await this.repository.findByEmail(email);
+	async verifyExists(id: string) {
+		const foundId = await this.repository.findById(id);
 
-		if (foundEmail) {
-			throw new ConflictException("email already exists");
+		if (!foundId) {
+			throw new NotFoundException("id not found");
 		}
 
+		return foundId;
+	}
+
+	async validateEmail(email: string, id?: string) {
 		const validateEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-		if (validateEmail.test(email)) {
-			return email;
-		} else {
+
+		if (!validateEmail.test(email)) {
 			throw new ConflictException("email is not valid");
+		}
+
+		const foundEmail = await this.repository.findByEmail(email);
+
+		if (foundEmail?.id != id) {
+			throw new ConflictException("email already exists");
 		}
 	}
 }

@@ -1,13 +1,6 @@
-import {
-	IsString,
-	IsEmail,
-	IsOptional,
-	IsDate,
-	IsNotEmpty,
-	IsUUID,
-} from "class-validator";
+import { IsDate, IsNotEmpty, IsOptional, IsUUID } from "class-validator";
 
-export class CreateUserDto {
+export class UpdateUserDto {
 	@IsNotEmpty()
 	@IsUUID()
 	id: string;
