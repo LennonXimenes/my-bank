@@ -18,6 +18,10 @@ export class UserRepository {
 		});
 	}
 
+	async deleteUser(id: string) {
+		return await this.prisma.user.delete({ where: { id } });
+	}
+
 	async findAll() {
 		return await this.prisma.user.findMany();
 	}
