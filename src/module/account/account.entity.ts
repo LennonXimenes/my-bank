@@ -1,7 +1,7 @@
 import { ConflictException } from "@nestjs/common";
 import { randomUUID } from "crypto";
 
-interface iAccount {
+export interface iAccount {
 	id?: string;
 	code?: number;
 	agency?: string;
@@ -114,10 +114,6 @@ export class AccountEntity {
 		this.agency = agency;
 	}
 	setCheckDigit(check_digit: string): void {
-		check_digit = check_digit.trim();
-		if (check_digit.length !== 1) {
-			throw new ConflictException("check digit must be exactly 1 character");
-		}
 		this.check_digit = check_digit;
 	}
 	setBalance(balance: number): void {
