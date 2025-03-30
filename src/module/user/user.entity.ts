@@ -4,7 +4,7 @@ import { randomUUID } from "crypto";
 import e from "express";
 import { env } from "process";
 
-interface iUser {
+export interface iUser {
 	id?: string;
 	name?: string;
 	email?: string;

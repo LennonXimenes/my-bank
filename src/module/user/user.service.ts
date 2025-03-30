@@ -3,6 +3,9 @@ import { CreateUserDto } from "./dto/create.dto";
 import { UpdateUserDto } from "./dto/update.dto";
 import { UserRepository } from "./user.repository";
 import { UserValidator } from "./user.validator";
+import { AccountRepository } from "../account/account.repository";
+import { AccountService } from "../account/account.service";
+import { AccountEntity } from "../account/account.entity";
 
 @Injectable()
 export class UserService {
@@ -18,7 +21,7 @@ export class UserService {
 			dto.birth_date,
 		);
 
-		return this.repository.createUser({
+		await this.repository.createUser({
 			...dto,
 			birth_date: formattedBirthDate,
 		});
@@ -42,10 +45,10 @@ export class UserService {
 	async deleteUser(id: string) {
 		await this.validator.verifyExists(id);
 
-		return this.repository.deleteUser(id);
+		return await this.repository.deleteUser(id);
 	}
 
 	async findAll() {
-		return this.repository.findAll();
+		return await this.repository.findAll();
 	}
 }
