@@ -15,12 +15,12 @@ export class UserService {
 		await this.validator.validateEmail(dto.email);
 
 		const formattedBirthDate = await this.validator.validateBirthDate(
-			dto.birthDate,
+			dto.birth_date,
 		);
 
 		return this.repository.createUser({
 			...dto,
-			birthDate: formattedBirthDate,
+			birth_date: formattedBirthDate,
 		});
 	}
 
@@ -30,13 +30,19 @@ export class UserService {
 		await this.validator.validateEmail(dto.email, id);
 
 		const formattedBirthDate = await this.validator.validateBirthDate(
-			dto.birthDate,
+			dto.birth_date,
 		);
 
 		return this.repository.updateUser(id, {
 			...dto,
-			birthDate: formattedBirthDate,
+			birth_date: formattedBirthDate,
 		});
+	}
+
+	async deleteUser(id: string) {
+		await this.validator.verifyExists(id);
+
+		return this.repository.deleteUser(id);
 	}
 
 	async findAll() {

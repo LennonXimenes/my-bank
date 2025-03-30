@@ -19,5 +19,5 @@ export class UpdateUserDto {
 
 	@IsOptional()
 	@IsDate()
-	birthDate?: Date;
+	birth_date?: Date;
 }

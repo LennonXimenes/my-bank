@@ -14,31 +14,33 @@ datasource db {
 }
 
 model User {
-  id String @id @default(uuid()) @db.Uuid
+  id          String   @id @default(uuid()) @db.Uuid
 
-  name       String
-  email      String   @unique
-  password   String
-  birth_date DateTime
+  name        String
+  email       String   @unique
+  password    String
+  birth_date  DateTime
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
-  deletedAt DateTime?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now())
+  deleted_at  DateTime?
 
-  account Account?
+  Account     Account?
 }
 
 model Account {
-  id String @id @default(uuid()) @db.Uuid
-
-  code          String
-  balance       Decimal @db.Decimal(10, 2)
+  id            String   @id @default(uuid()) @db.Uuid
+  
+  code          Int      @unique @default(autoincrement()) 
+  agency        String   
+  check_digit   String   
+  balance       Decimal  @db.Decimal(10, 2)
   joint_account Boolean
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
-  deletedAt DateTime?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now())
+  deleted_at    DateTime?
 
-  user_id String @unique @db.Uuid
-  User    User   @relation(fields: [user_id], references: [id])
+  user_id       String   @unique @db.Uuid
+  User          User     @relation(fields: [user_id], references: [id])
 }
