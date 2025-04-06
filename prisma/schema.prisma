@@ -26,12 +26,14 @@ model User {
   deleted_at  DateTime?
 
   Account     Account?
+
+  @@map("User")
 }
 
 model Account {
   id            String   @id @default(uuid()) @db.Uuid
   
-  code          Int      @unique @default(autoincrement()) 
+  code          String
   agency        String   
   check_digit   String   
   balance       Decimal  @db.Decimal(10, 2)
@@ -42,5 +44,7 @@ model Account {
   deleted_at    DateTime?
 
   user_id       String   @unique @db.Uuid
-  User          User     @relation(fields: [user_id], references: [id])
+  User          User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("Account")
 }

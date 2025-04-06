@@ -3,15 +3,19 @@ import { CreateUserDto } from "./dto/create.dto";
 import { UpdateUserDto } from "./dto/update.dto";
 import { UserRepository } from "./user.repository";
 import { UserValidator } from "./user.validator";
-import { AccountRepository } from "../account/account.repository";
-import { AccountService } from "../account/account.service";
 import { AccountEntity } from "../account/account.entity";
+import { AccountService } from "../account/account.service";
+import { UserEntity } from "./user.entity";
+import { Decimal } from "@prisma/client/runtime/library";
+import { AccountRepository } from "../account/account.repository";
 
 @Injectable()
 export class UserService {
 	constructor(
 		private readonly repository: UserRepository,
 		private readonly validator: UserValidator,
+		private readonly accountService: AccountService,
+		private readonly accountRepository: AccountRepository,
 	) {}
 
 	async createUser(dto: CreateUserDto) {
@@ -21,9 +25,30 @@ export class UserService {
 			dto.birth_date,
 		);
 
+		const User = new UserEntity(dto);
+
 		await this.repository.createUser({
-			...dto,
+			...User,
 			birth_date: formattedBirthDate,
+		});
+
+		const nextCode = await this.accountRepository.getNextCode();
+		const paddedCode = String(nextCode).padStart(8, "0");
+
+		const Account = new AccountEntity({
+			id: User.id,
+			agency: "0001",
+			code: paddedCode,
+			user_id: User.id,
+			joint_account: false,
+		});
+
+		Account.check_digit =
+			await this.accountService.createCheckDigit(paddedCode);
+
+		await this.accountRepository.createAccount({
+			...Account,
+			balance: new Decimal(0),
 		});
 	}
 
