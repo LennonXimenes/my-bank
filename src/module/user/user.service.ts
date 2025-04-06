@@ -8,6 +8,7 @@ import { AccountService } from "../account/account.service";
 import { UserEntity } from "./user.entity";
 import { Decimal } from "@prisma/client/runtime/library";
 import { AccountRepository } from "../account/account.repository";
+import { sanitize } from "src/common/helpers/sanitize";
 
 @Injectable()
 export class UserService {
@@ -50,6 +51,8 @@ export class UserService {
 			...Account,
 			balance: new Decimal(0),
 		});
+
+		return sanitize(User);
 	}
 
 	async updateUser(id: string, dto: UpdateUserDto) {
@@ -61,10 +64,12 @@ export class UserService {
 			dto.birth_date,
 		);
 
-		return this.repository.updateUser(id, {
+		const updatedUser = await this.repository.updateUser(id, {
 			...dto,
 			birth_date: formattedBirthDate,
 		});
+
+		return sanitize(updatedUser);
 	}
 
 	async deleteUser(id: string) {
@@ -74,6 +79,8 @@ export class UserService {
 	}
 
 	async findAll() {
-		return await this.repository.findAll();
+		const users = await this.repository.findAll();
+
+		return sanitize(users);
 	}
 }
