@@ -21,6 +21,12 @@ export class AccountRepository {
 		});
 	}
 
+	async findById(id: string): Promise<iAccount> {
+		return await this.prisma.account.findUnique({
+			where: { user_id: id },
+		});
+	}
+
 	async getNextCode(): Promise<number> {
 		const lastAccount = await this.prisma.account.findFirst({
 			orderBy: { code: "desc" },

@@ -1,4 +1,11 @@
-import { IsDate, IsNotEmpty, IsOptional, IsUUID } from "class-validator";
+import {
+	IsDate,
+	IsEmail,
+	IsNotEmpty,
+	IsOptional,
+	IsString,
+	IsUUID,
+} from "class-validator";
 
 export class UpdateUserDto {
 	@IsNotEmpty()
@@ -6,15 +13,15 @@ export class UpdateUserDto {
 	id: string;
 
 	@IsOptional()
-	@IsDate()
+	@IsString()
 	name?: string;
 
 	@IsOptional()
-	@IsDate()
+	@IsEmail()
 	email?: string;
 
 	@IsOptional()
-	@IsDate()
+	@IsString()
 	password?: string;
 
 	@IsOptional()
