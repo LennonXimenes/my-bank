@@ -1,12 +1,13 @@
 import { ConflictException } from "@nestjs/common";
+import { Decimal } from "@prisma/client/runtime/library";
 import { randomUUID } from "crypto";
 
 export interface iAccount {
 	id?: string;
-	code?: number;
+	code?: string;
 	agency?: string;
 	check_digit?: string;
-	balance?: number;
+	balance?: Decimal;
 	joint_account?: boolean;
 	created_at?: Date;
 	updated_at?: Date;
@@ -31,7 +32,7 @@ interface iAccountUpdate {
 
 export class AccountEntity {
 	id: string;
-	code: number;
+	code: string;
 	agency: string;
 	check_digit: string;
 	balance: number;
@@ -46,7 +47,7 @@ export class AccountEntity {
 		if (account.code) this.code = account.code;
 		if (account.agency) this.setAgency(account.agency);
 		if (account.check_digit) this.setCheckDigit(account.check_digit);
-		this.balance = account.balance ?? 0;
+		this.balance = account.balance?.toNumber() ?? 0;
 		this.joint_account = account.joint_account ?? false;
 		this.created_at = account.created_at ?? new Date();
 		this.updated_at = account.updated_at ?? new Date();
@@ -72,7 +73,7 @@ export class AccountEntity {
 	getId(): string {
 		return this.id;
 	}
-	getCode(): number {
+	getCode(): string {
 		return this.code;
 	}
 	getAgency(): string {
@@ -103,23 +104,16 @@ export class AccountEntity {
 	setId(): void {
 		this.id = randomUUID();
 	}
-	setCode(code: number): void {
+	setCode(code: string): void {
 		this.code = code;
 	}
 	setAgency(agency: string): void {
-		agency = agency.trim();
-		if (agency.length === 0) {
-			throw new ConflictException("agency cannot be empty");
-		}
 		this.agency = agency;
 	}
 	setCheckDigit(check_digit: string): void {
 		this.check_digit = check_digit;
 	}
 	setBalance(balance: number): void {
-		if (balance < 0) {
-			throw new ConflictException("balance cannot be negative");
-		}
 		this.balance = balance;
 	}
 	setJointAccount(joint_account: boolean): void {

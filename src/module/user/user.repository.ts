@@ -24,7 +24,12 @@ export class UserRepository {
 	}
 
 	async findAll(): Promise<iUser[]> {
-		return await this.prisma.user.findMany();
+		return await this.prisma.user.findMany({
+			// where: {},
+			include: {
+				Account: true,
+			},
+		});
 	}
 
 	async findById(id: string): Promise<iUser> {

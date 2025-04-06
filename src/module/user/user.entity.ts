@@ -9,24 +9,24 @@ export interface iUser {
 	name?: string;
 	email?: string;
 	password?: string;
-	birthDate?: Date;
-	createdAt?: Date;
-	updatedAt?: Date;
-	deletedAt?: Date | null;
+	birth_date?: Date;
+	created_at?: Date;
+	updated_at?: Date;
+	deleted_at?: Date | null;
 }
 
 interface iUserCreate {
 	name: string;
 	email: string;
 	password: string;
-	birthDate: Date;
+	birth_date: Date;
 }
 
 interface iUserUpdate {
 	name?: string;
 	email?: string;
 	password?: string;
-	birthDate?: Date;
+	birth_date?: Date;
 }
 
 export class UserEntity {
@@ -34,20 +34,20 @@ export class UserEntity {
 	name: string;
 	email: string;
 	password: string;
-	birthDate: Date;
-	createdAt: Date;
-	updatedAt: Date;
-	deletedAt: Date | null;
+	birth_date: Date;
+	created_at: Date;
+	updated_at: Date;
+	deleted_at: Date | null;
 
 	constructor(user: iUser) {
-		if (user.id) this.id = user.id;
+		this.id = user.id ?? randomUUID();
 		if (user.name) this.setName(user.name);
 		if (user.email) this.setEmail(user.email);
 		if (user.password) this.setPassword(user.password);
-		if (user.birthDate) this.setBirthDate(user.birthDate);
-		this.createdAt = user.createdAt ?? new Date();
-		this.updatedAt = user.updatedAt ?? new Date();
-		this.deletedAt = user.deletedAt ?? null;
+		if (user.birth_date) this.setBirthDate(user.birth_date);
+		this.created_at = user.created_at ?? new Date();
+		this.updated_at = user.updated_at ?? new Date();
+		this.deleted_at = user.deleted_at ?? null;
 	}
 
 	get() {
@@ -56,10 +56,10 @@ export class UserEntity {
 			name: this.name,
 			email: this.email,
 			password: this.password,
-			birthDate: this.birthDate,
-			createdAt: this.createdAt,
-			updatedAt: this.updatedAt,
-			deletedAt: this.deletedAt,
+			birthDate: this.birth_date,
+			createdAt: this.created_at,
+			updatedAt: this.updated_at,
+			deletedAt: this.deleted_at,
 		};
 	}
 
@@ -76,16 +76,16 @@ export class UserEntity {
 		return this.password;
 	}
 	getBirthDate(): Date {
-		return this.birthDate;
+		return this.birth_date;
 	}
 	getCreatedAt(): Date {
-		return this.createdAt;
+		return this.created_at;
 	}
 	getUpdatedAt(): Date {
-		return this.updatedAt;
+		return this.updated_at;
 	}
 	getDeletedAt(): Date {
-		return this.deletedAt;
+		return this.deleted_at;
 	}
 
 	setId(): void {
@@ -93,7 +93,7 @@ export class UserEntity {
 	}
 	setName(name: string): void {
 		name = name.trim();
-		if (name.length < 3 || name.length > 50) {
+		if (name?.length < 3 || name?.length > 50) {
 			throw new ConflictException("name must be between 3 and 50 characters");
 		}
 		this.name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
@@ -117,19 +117,19 @@ export class UserEntity {
 			: bcrypt.hashSync(password, Number(env.HASH_SALT));
 	}
 	setBirthDate(birthDate: Date): void {
-		this.birthDate = new Date(birthDate);
+		this.birth_date = new Date(birthDate);
 	}
 	setCreatedAt(): void {
-		this.createdAt = new Date();
+		this.created_at = new Date();
 	}
 	setUpdatedAt(): void {
-		this.updatedAt = new Date();
+		this.updated_at = new Date();
 	}
 	setDeletedAt(deleted: boolean): void {
 		if (deleted) {
-			this.deletedAt = new Date();
+			this.deleted_at = new Date();
 		} else {
-			this.deletedAt = null;
+			this.deleted_at = null;
 		}
 	}
 
@@ -138,7 +138,7 @@ export class UserEntity {
 		this.setName(user.name);
 		this.setEmail(user.email);
 		this.setPassword(user.password);
-		this.setBirthDate(user.birthDate);
+		this.setBirthDate(user.birth_date);
 		this.setCreatedAt();
 		this.setUpdatedAt();
 		this.setDeletedAt(false);
@@ -148,6 +148,6 @@ export class UserEntity {
 		if (user.name) this.setName(user.name);
 		if (user.email) this.setEmail(user.email);
 		if (user.password) this.setPassword(user.password);
-		if (user.birthDate) this.setBirthDate(user.birthDate);
+		if (user.birth_date) this.setBirthDate(user.birth_date);
 	}
 }

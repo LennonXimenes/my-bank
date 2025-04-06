@@ -1,15 +1,17 @@
+import { Decimal } from "@prisma/client/runtime/library";
 import {
 	IsNotEmpty,
 	IsString,
 	IsDecimal,
 	IsBoolean,
 	IsNumber,
+	IsUUID,
 } from "class-validator";
 
 export class CreateAccountDto {
 	@IsNotEmpty()
-	@IsNumber()
-	code: number;
+	@IsString()
+	code: string;
 
 	@IsNotEmpty()
 	@IsString()
@@ -21,13 +23,13 @@ export class CreateAccountDto {
 
 	@IsNotEmpty()
 	@IsDecimal()
-	balance: number;
+	balance: Decimal;
 
 	@IsNotEmpty()
 	@IsBoolean()
 	joint_account: boolean;
 
 	@IsNotEmpty()
-	@IsString()
+	@IsUUID()
 	user_id: string;
 }
