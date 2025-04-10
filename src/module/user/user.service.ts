@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
+import { Decimal } from "@prisma/client/runtime/library";
+import { sanitize } from "src/common/helpers/sanitize";
+import { AccountEntity } from "../account/account.entity";
+import { AccountRepository } from "../account/account.repository";
+import { AccountService } from "../account/account.service";
 import { CreateUserDto } from "./dto/create.dto";
 import { UpdateUserDto } from "./dto/update.dto";
+import { UserEntity } from "./user.entity";
 import { UserRepository } from "./user.repository";
 import { UserValidator } from "./user.validator";
-import { AccountEntity } from "../account/account.entity";
-import { AccountService } from "../account/account.service";
-import { UserEntity } from "./user.entity";
-import { Decimal } from "@prisma/client/runtime/library";
-import { AccountRepository } from "../account/account.repository";
-import { sanitize } from "src/common/helpers/sanitize";
 
 @Injectable()
 export class UserService {
