@@ -1,11 +1,12 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { randomUUID } from "crypto";
+import { SavingStatus } from "src/common/enums/saving-status.enum";
 
 export interface iSaving {
 	id?: string;
 	balance?: Decimal;
 	interest_rate?: Decimal;
-	status?: string;
+	status?: SavingStatus;
 	created_at?: Date;
 	updated_at?: Date;
 	account_id?: string;
@@ -14,14 +15,14 @@ export interface iSaving {
 interface iSavingCreate {
 	balance?: number;
 	interest_rate?: number;
-	status?: string;
+	status?: SavingStatus;
 	account_id?: string;
 }
 
 interface iSavingUpdate {
 	balance?: number;
 	interest_rate?: number;
-	status?: string;
+	status?: SavingStatus;
 	account_id?: string;
 }
 
@@ -29,7 +30,7 @@ export class SavingEntity {
 	id: string;
 	balance: number;
 	interest_rate: number;
-	status: string;
+	status: SavingStatus;
 	created_at: Date;
 	updated_at: Date;
 	account_id: string;
@@ -38,7 +39,7 @@ export class SavingEntity {
 		if (saving.id) this.id = saving.id;
 		this.balance = saving.balance?.toNumber() ?? 0;
 		this.interest_rate = saving.interest_rate?.toNumber() ?? 0;
-		this.status = saving.status ?? "inactive";
+		this.status = saving.status ?? SavingStatus.CLOSED;
 		this.created_at = saving.created_at ?? new Date();
 		this.updated_at = saving.updated_at ?? new Date();
 		this.account_id = saving.account_id ?? "";
@@ -65,7 +66,7 @@ export class SavingEntity {
 	getInterestRate(): number {
 		return this.interest_rate;
 	}
-	getStatus(): string {
+	getStatus(): SavingStatus {
 		return this.status;
 	}
 	getCreatedAt(): Date {
@@ -87,7 +88,7 @@ export class SavingEntity {
 	setInterestRate(interest_rate: number): void {
 		this.interest_rate = interest_rate;
 	}
-	setStatus(status: string): void {
+	setStatus(status: SavingStatus): void {
 		this.status = status;
 	}
 	setCreatedAt(): void {
@@ -104,7 +105,7 @@ export class SavingEntity {
 		this.setId();
 		this.setBalance(saving.balance ?? 0);
 		this.setInterestRate(saving.interest_rate ?? 0);
-		this.setStatus(saving.status ?? "inactive");
+		this.setStatus(saving.status ?? SavingStatus.CLOSED);
 		this.setCreatedAt();
 		this.setUpdatedAt();
 		this.setAccountId(saving.account_id ?? "");

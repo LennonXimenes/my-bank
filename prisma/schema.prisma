@@ -54,9 +54,9 @@ model Account {
 model Saving {
   id String @id @default(uuid()) @db.Uuid
 
-  balance       Decimal @db.Decimal(10, 2)
-  interest_rate Decimal @db.Decimal(10, 2)
-  status        String
+  balance       Decimal      @db.Decimal(10, 2)
+  interest_rate Decimal      @db.Decimal(10, 2)
+  status        SavingStatus
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -66,4 +66,10 @@ model Saving {
   Account Account @relation(fields: [account_id], references: [id])
 
   @@map("Saving")
+}
+
+enum SavingStatus {
+  ACTIVE
+  CLOSED
+  SUSPENDED
 }

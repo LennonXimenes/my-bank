@@ -1,4 +1,4 @@
-import { Controller, Param, ParseUUIDPipe, Post } from "@nestjs/common";
+import { Controller } from "@nestjs/common";
 import { AccountService } from "./account.service";
 
 @Controller("account")
