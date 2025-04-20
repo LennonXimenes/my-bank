@@ -1,5 +1,5 @@
-import { Decimal } from "@prisma/client/runtime/library";
 import { randomUUID } from "crypto";
+import Decimal from "decimal.js";
 
 export interface iAccount {
 	id?: string;
