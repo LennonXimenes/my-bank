@@ -1,12 +1,11 @@
-import { Decimal } from "@prisma/client/runtime/library";
 import {
+	IsBoolean,
+	IsDecimal,
 	IsNotEmpty,
 	IsString,
-	IsDecimal,
-	IsBoolean,
-	IsNumber,
 	IsUUID,
 } from "class-validator";
+import Decimal from "decimal.js";
 
 export class CreateAccountDto {
 	@IsNotEmpty()
