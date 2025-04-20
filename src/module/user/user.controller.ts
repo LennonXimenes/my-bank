@@ -30,7 +30,7 @@ export class UserController {
 	}
 
 	@Delete("delete/:id")
-	deletUser(@Param("id", ParseUUIDPipe) id: string) {
+	deleteUser(@Param("id", ParseUUIDPipe) id: string) {
 		return this.service.deleteUser(id);
 	}
 
