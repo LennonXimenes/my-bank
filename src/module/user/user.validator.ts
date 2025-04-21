@@ -4,7 +4,7 @@ import {
 	Injectable,
 	NotFoundException,
 } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "../_prisma/prisma.service";
 import { UserRepository } from "./user.repository";
 
 @Injectable()
@@ -50,11 +50,21 @@ export class UserValidator {
 		return foundId;
 	}
 
+	async verifyEmailExists(email: string) {
+		const foundEmail = await this.repository.findByEmail(email);
+
+		if (!foundEmail) {
+			throw new NotFoundException("invalid credentials");
+		}
+
+		return foundEmail;
+	}
+
 	async validateEmail(email: string, id?: string) {
 		const validateEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 		if (!validateEmail.test(email)) {
-			throw new ConflictException("email is not valid");
+			throw new ConflictException("email not found");
 		}
 
 		const foundEmail = await this.repository.findByEmail(email);
