@@ -1,7 +1,6 @@
 import { ConflictException } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { randomUUID } from "crypto";
-import { env } from "process";
 
 export interface iUser {
 	id?: string;
@@ -113,7 +112,7 @@ export class UserEntity {
 		const isHashed = password.startsWith("$2b$");
 		this.password = isHashed
 			? password
-			: bcrypt.hashSync(password, Number(env.HASH_SALT));
+			: bcrypt.hashSync(password, Number(process.env.HASH_SALT));
 	}
 	setBirthDate(birthDate: Date): void {
 		this.birth_date = birthDate;

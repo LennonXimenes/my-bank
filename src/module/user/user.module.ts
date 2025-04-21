@@ -10,6 +10,6 @@ import { UserValidator } from "./user.validator";
 	imports: [PrismaModule, AccountModule],
 	controllers: [UserController],
 	providers: [UserService, UserRepository, UserValidator],
-	exports: [],
+	exports: [UserValidator],
 })
 export class UserModule {}
