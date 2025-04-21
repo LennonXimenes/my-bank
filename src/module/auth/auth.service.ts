@@ -11,7 +11,7 @@ export class AuthService {
 	) {}
 
 	async validateUser(email: string, password: string) {
-		const user = await this.userValidator.validateEmail(email);
+		const user = await this.userValidator.verifyEmailExists(email);
 
 		if (!user) {
 			return null;
