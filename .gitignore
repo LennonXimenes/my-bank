@@ -130,6 +130,6 @@ dist
 .pnp.*
 
 # Etc
-notes.txt
-list-exceptions.txt
-conventions.txt
+_notes.txt
+_list-exceptions.txt
+_conventions.txt

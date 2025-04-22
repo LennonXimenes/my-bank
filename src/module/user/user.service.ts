@@ -47,7 +47,7 @@ export class UserService {
 		Account.check_digit =
 			await this.accountService.createCheckDigit(paddedCode);
 
-		await this.accountRepository.createAccount({
+		await this.accountRepository.create({
 			...Account,
 			balance: new Decimal(0),
 		});
