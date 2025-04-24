@@ -1,6 +1,6 @@
+import { SavingStatus } from "@prisma/client";
 import { randomUUID } from "crypto";
 import Decimal from "decimal.js";
-import { SavingStatus } from "src/common/enums/saving-status.enum";
 
 export interface iSaving {
 	id?: string;

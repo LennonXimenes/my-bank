@@ -73,4 +73,14 @@ export class UserValidator {
 			throw new ConflictException("email already exists");
 		}
 	}
+
+	async verifyUserAccount(id: string) {
+		const userAccount = await this.repository.userAccount(id);
+
+		if (!userAccount) {
+			throw new NotFoundException("user account not found");
+		}
+
+		return userAccount;
+	}
 }
