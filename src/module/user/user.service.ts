@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Decimal } from "@prisma/client/runtime/library";
+import Decimal from "decimal.js";
 import { sanitize } from "src/common/helpers/sanitize";
 import { AccountEntity } from "../account/account.entity";
 import { AccountRepository } from "../account/account.repository";
@@ -47,7 +47,7 @@ export class UserService {
 		Account.check_digit =
 			await this.accountService.createCheckDigit(paddedCode);
 
-		await this.accountRepository.createAccount({
+		await this.accountRepository.create({
 			...Account,
 			balance: new Decimal(0),
 		});

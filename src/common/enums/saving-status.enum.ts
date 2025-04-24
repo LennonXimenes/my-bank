@@ -1,5 +1,5 @@
-export enum SavingStatus {
-	ACTIVE = "active",
-	CLOSED = "closed",
-	SUSPENDED = "suspended",
-}
+// export enum SavingStatus {
+// 	ACTIVE = "ACTIVE",
+// 	CLOSED = "CLOSED",
+// 	SUSPENDED = "SUSPENDED",
+// }

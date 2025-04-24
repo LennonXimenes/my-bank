@@ -43,4 +43,13 @@ export class UserRepository {
 			where: { email },
 		});
 	}
+
+	async userAccount(id: string) {
+		return await this.prisma.user.findUnique({
+			where: { id },
+			include: {
+				Account: true,
+			},
+		});
+	}
 }

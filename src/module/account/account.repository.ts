@@ -7,8 +7,8 @@ import { CreateAccountDto } from "./dto/create.dto";
 export class AccountRepository {
 	constructor(private readonly prisma: PrismaService) {}
 
-	async createAccount(dto: CreateAccountDto): Promise<iAccount> {
-		const { user_id, ...rest } = dto;
+	async create(data: CreateAccountDto): Promise<iAccount> {
+		const { user_id, ...rest } = data;
 		return await this.prisma.account.create({
 			data: {
 				...rest,
