@@ -30,16 +30,16 @@ interface iAccountUpdate {
 }
 
 export class AccountEntity {
-	id: string;
-	code: string;
-	agency: string;
-	check_digit: string;
-	balance: number;
-	joint_account: boolean;
-	created_at: Date;
-	updated_at: Date;
-	deleted_at: Date | null;
-	user_id: string;
+	private id: string;
+	private code: string;
+	private agency: string;
+	private check_digit: string;
+	private balance: number;
+	private joint_account: boolean;
+	private created_at: Date;
+	private updated_at: Date;
+	private deleted_at: Date | null;
+	private user_id: string;
 
 	constructor(account: iAccount) {
 		if (account.id) this.id = account.id;
