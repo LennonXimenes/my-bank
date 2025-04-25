@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../_prisma/prisma.service";
+import { PrismaService } from "../../prisma/prisma.service";
 import { iSaving } from "./saving.entity";
 import { CreateSavingRepositoryPayload } from "./type/saving.type";
 
