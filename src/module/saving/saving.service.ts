@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { SavingStatus } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 import { SettingService } from "../setting/setting.service";
-import { iUser } from "../user/user.entity";
 import { UserValidator } from "../user/user.validator";
 import { SavingEntity } from "./saving.entity";
 import { SavingRepository } from "./saving.repository";
@@ -17,10 +16,10 @@ export class SavingService {
 		private readonly settingService: SettingService,
 	) {}
 
-	async createSaving(user: iUser) {
+	async createSaving(user: any) {
 		const userFound = await this.userValidator.verifyUserAccount(user.id);
 
-		const accountId = userFound.Account.id;
+		const accountId = userFound?.Account?.id;
 
 		// await this.validator.accountExists(accountId); // PARA UPDATE
 

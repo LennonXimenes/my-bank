@@ -26,6 +26,7 @@ A modern and extensible banking API built with **NestJS** and **PostgreSQL**, de
 - [ ] Investments
 - [ ] Investments Type
 - [ ] Authentication & Authorization
+- [ ] Settings
 
 ## 🧱 Technologies
 
