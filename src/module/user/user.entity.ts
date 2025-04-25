@@ -28,14 +28,14 @@ interface iUserUpdate {
 }
 
 export class UserEntity {
-	id: string;
-	name: string;
-	email: string;
-	password: string;
-	birth_date: Date;
-	created_at: Date;
-	updated_at: Date;
-	deleted_at: Date | null;
+	private id: string;
+	private name: string;
+	private email: string;
+	private password: string;
+	private birth_date: Date;
+	private created_at: Date;
+	private updated_at: Date;
+	private deleted_at: Date | null;
 
 	constructor(user: iUser) {
 		this.id = user.id ?? randomUUID();

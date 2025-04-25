@@ -27,13 +27,13 @@ interface iSavingUpdate {
 }
 
 export class SavingEntity {
-	id: string;
-	balance: number;
-	interest_rate: number;
-	status: SavingStatus;
-	created_at: Date;
-	updated_at: Date;
-	account_id: string;
+	private id: string;
+	private balance: number;
+	private interest_rate: number;
+	private status: SavingStatus;
+	private created_at: Date;
+	private updated_at: Date;
+	private account_id: string;
 
 	constructor(saving: iSaving) {
 		if (saving.id) this.id = saving.id;
