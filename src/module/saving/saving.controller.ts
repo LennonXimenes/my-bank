@@ -8,7 +8,6 @@ export class SavingController {
 	@UseGuards()
 	@Post("create")
 	createSaving() {
-		console.log("x");
 		return;
 	}
 }
