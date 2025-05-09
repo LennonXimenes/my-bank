@@ -109,10 +109,17 @@ out
 
 # Gatsby
 .cache/
-# public  # Descomente se usar Gatsby
+/public  # Descomente se usar Gatsby
+
+# Arquivos de configurações temporárias
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
 
 # Arquivos de anotações locais
 _notes.txt
 _notes.md
 _list-exceptions.txt
 _conventions.txt
+
