@@ -1,151 +1,103 @@
-import { ConflictException } from "@nestjs/common";
-import * as bcrypt from "bcrypt";
-import { randomUUID } from "crypto";
+import { Account } from "@prisma/client";
+import { BaseEntity } from "src/common/abstracts/base-entity.abstract";
+import bcrypt from "bcrypt";
 
-export interface iUser {
-	id?: string;
-	name?: string;
-	email?: string;
-	password?: string;
-	birth_date?: Date;
-	created_at?: Date;
-	updated_at?: Date;
-	deleted_at?: Date | null;
-}
+export class User extends BaseEntity {
+	// 1. Atributos
+	public name: string;
+	public email: string;
+	private _password: string;
+	public birth_date: Date;
+	public account?: Account;
 
-interface iUserCreate {
-	name: string;
-	email: string;
-	password: string;
-	birth_date: Date;
-}
-
-interface iUserUpdate {
-	name?: string;
-	email?: string;
-	password?: string;
-	birth_date?: Date;
-}
-
-export class UserEntity {
-	private id: string;
-	private name: string;
-	private email: string;
-	private password: string;
-	private birth_date: Date;
-	private created_at: Date;
-	private updated_at: Date;
-	private deleted_at: Date | null;
-
-	constructor(user: iUser) {
-		this.id = user.id ?? randomUUID();
-		if (user.name) this.setName(user.name);
-		if (user.email) this.setEmail(user.email);
-		if (user.password) this.setPassword(user.password);
-		if (user.birth_date) this.setBirthDate(user.birth_date);
-		this.created_at = user.created_at ?? new Date();
-		this.updated_at = user.updated_at ?? new Date();
-		this.deleted_at = user.deleted_at ?? null;
-	}
-
-	get() {
-		return {
-			id: this.id,
-			name: this.name,
-			email: this.email,
-			password: this.password,
-			birthDate: this.birth_date,
-			createdAt: this.created_at,
-			updatedAt: this.updated_at,
-			deletedAt: this.deleted_at,
-		};
-	}
-
-	getId(): string {
-		return this.id;
-	}
-	getName(): string {
-		return this.name;
-	}
-	getEmail(): string {
-		return this.email;
-	}
-	getPassword(): string {
-		return this.password;
-	}
-	getBirthDate(): Date {
-		return this.birth_date;
-	}
-	getCreatedAt(): Date {
-		return this.created_at;
-	}
-	getUpdatedAt(): Date {
-		return this.updated_at;
-	}
-	getDeletedAt(): Date {
-		return this.deleted_at;
-	}
-
-	setId(): void {
-		this.id = randomUUID();
-	}
-	setName(name: string): void {
-		name = name.trim();
-		if (name?.length < 3 || name?.length > 50) {
-			throw new ConflictException("name must be between 3 and 50 characters");
-		}
-		this.name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-	}
-
-	setEmail(email: string): void {
-		email = email.toLowerCase().trim();
+	// 2. Construtor
+	private constructor(
+		id: string,
+		name: string,
+		email: string,
+		password: string,
+		birth_date: Date,
+		account?: Account,
+	) {
+		super(id);
+		this.name = name;
 		this.email = email;
+		this.setPassword(password);
+		this.birth_date = birth_date;
+		this.account = account;
 	}
-	setPassword(password: string): void {
-		const validatePass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,50}$/;
-		if (!validatePass.test(password)) {
-			throw new ConflictException(
-				"the password must be between 8 and 50 characters long, contain at least one uppercase letter, one lowercase letter, and one special character.",
+
+	// 3. Métodos Privados
+	private async hashPassword(password: string): Promise<string> {
+		const saltRounds = 10;
+		return await bcrypt.hash(password, saltRounds);
+	}
+
+	private validateName(name: string): void {
+		if (!name || name.trim().length < 3) {
+			throw new Error("Name must be at least 3 characters long");
+		}
+	}
+
+	private validateEmail(email: string): void {
+		const validateEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+		if (!validateEmail.test(email)) {
+			throw new Error("Invalid email format");
+		}
+	}
+
+	private validatePassword(password: string): void {
+		const validatePassword =
+			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+		if (!validatePassword.test(password)) {
+			throw new Error(
+				"Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character",
 			);
 		}
+	}
 
-		const isHashed = password.startsWith("$2b$");
-		this.password = isHashed
-			? password
-			: bcrypt.hashSync(password, Number(process.env.HASH_SALT));
-	}
-	setBirthDate(birthDate: Date): void {
-		this.birth_date = birthDate;
-	}
-	setCreatedAt(): void {
-		this.created_at = new Date();
-	}
-	setUpdatedAt(): void {
-		this.updated_at = new Date();
-	}
-	setDeletedAt(deleted: boolean): void {
-		if (deleted) {
-			this.deleted_at = new Date();
-		} else {
-			this.deleted_at = null;
+	private validateBirthDate(birth_date: Date): void {
+		if (!(birth_date instanceof Date)) {
+			throw new Error("Invalid birth date format");
+		}
+		const today = new Date();
+		if (birth_date > today) {
+			throw new Error("Birth date cannot be in the future");
+		}
+		const minAgeDate = new Date();
+		minAgeDate.setFullYear(today.getFullYear() - 18);
+		if (birth_date > minAgeDate) {
+			throw new Error("User must be at least 18 years old");
 		}
 	}
 
-	create(user: iUserCreate): void {
-		this.setId();
-		this.setName(user.name);
-		this.setEmail(user.email);
-		this.setPassword(user.password);
-		this.setBirthDate(user.birth_date);
-		this.setCreatedAt();
-		this.setUpdatedAt();
-		this.setDeletedAt(false);
+	// 4. Métodos Públicos
+	public async setPassword(password: string): Promise<void> {
+		this.validatePassword(password);
+		this._password = await this.hashPassword(password);
 	}
-	update(user: iUserUpdate): void {
-		this.setUpdatedAt();
-		if (user.name) this.setName(user.name);
-		if (user.email) this.setEmail(user.email);
-		if (user.password) this.setPassword(user.password);
-		if (user.birth_date) this.setBirthDate(user.birth_date);
+
+	public getPassword(): string {
+		return this._password;
+	}
+
+	public async comparePassword(password: string): Promise<boolean> {
+		return await bcrypt.compare(password, this._password);
+	}
+
+	// 5. Métodos de Fábrica
+	public static async create(
+		id: string,
+		name: string,
+		email: string,
+		password: string,
+		birth_date: Date,
+		account?: Account,
+	): Promise<User> {
+		const user = new User(id, name, email, password, birth_date, account);
+		user.validateName(name);
+		user.validateEmail(email);
+		user.validateBirthDate(birth_date);
+		return user;
 	}
 }
