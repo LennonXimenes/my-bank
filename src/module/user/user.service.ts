@@ -6,81 +6,38 @@ import { AccountRepository } from "../account/account.repository";
 import { AccountService } from "../account/account.service";
 import { CreateUserDto } from "./dto/create.dto";
 import { UpdateUserDto } from "./dto/update.dto";
-import { UserEntity } from "./user.entity";
 import { UserRepository } from "./user.repository";
 import { UserValidator } from "./user.validator";
+import { ResponseUserDto } from "./dto/response.dto";
 
 @Injectable()
 export class UserService {
-	constructor(
-		private readonly repository: UserRepository,
-		private readonly validator: UserValidator,
-		private readonly accountService: AccountService,
-		private readonly accountRepository: AccountRepository,
-	) {}
+  constructor(
+    private readonly repository: UserRepository,
+    private readonly validator: UserValidator,
+    private readonly accountService: AccountService,
+    private readonly accountRepository: AccountRepository,
+  ) {}
 
-	async createUser(dto: CreateUserDto) {
-		await this.validator.validateEmail(dto.email);
+  async createUser(dto: CreateUserDto): Promise<ResponseUserDto> {
+    await this.validator.validateEmail(dto.email);
 
-		const formattedBirthDate = await this.validator.validateBirthDate(
-			dto.birth_date,
-		);
+    return;
+  }
 
-		const User = new UserEntity(dto);
+  async updateUser(id: string, dto: UpdateUserDto): Promise<any> {
+    return;
+  }
 
-		await this.repository.createUser({
-			...User,
-			birth_date: formattedBirthDate,
-		});
+  async deleteUser(id: string): Promise<any> {
+    await this.validator.verifyExists(id);
 
-		const nextCode = await this.accountRepository.getNextCode();
-		const paddedCode = String(nextCode).padStart(8, "0");
+    return await this.repository.deleteUser(id);
+  }
 
-		const Account = new AccountEntity({
-			id: User.id,
-			agency: "0001",
-			code: paddedCode,
-			user_id: User.id,
-			joint_account: false,
-		});
+  async findAll(): Promise<any> {
+    const users = await this.repository.findAll();
 
-		Account.check_digit =
-			await this.accountService.createCheckDigit(paddedCode);
-
-		await this.accountRepository.create({
-			...Account,
-			balance: new Decimal(0),
-		});
-
-		return sanitize(User);
-	}
-
-	async updateUser(id: string, dto: UpdateUserDto) {
-		await this.validator.verifyExists(id);
-
-		await this.validator.validateEmail(dto.email, id);
-
-		const formattedBirthDate = await this.validator.validateBirthDate(
-			dto.birth_date,
-		);
-
-		const updatedUser = await this.repository.updateUser(id, {
-			...dto,
-			birth_date: formattedBirthDate,
-		});
-
-		return sanitize(updatedUser);
-	}
-
-	async deleteUser(id: string) {
-		await this.validator.verifyExists(id);
-
-		return await this.repository.deleteUser(id);
-	}
-
-	async findAll() {
-		const users = await this.repository.findAll();
-
-		return sanitize(users);
-	}
+    return sanitize(users);
+  }
 }

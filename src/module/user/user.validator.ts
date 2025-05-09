@@ -1,5 +1,4 @@
 import {
-	BadRequestException,
 	ConflictException,
 	Injectable,
 	NotFoundException,
@@ -13,32 +12,6 @@ export class UserValidator {
 		private readonly prisma: PrismaService,
 		private readonly repository: UserRepository,
 	) {}
-
-	async validateBirthDate(birthDate: Date) {
-		if (!birthDate) {
-			throw new BadRequestException("birthDate is required");
-		}
-
-		const today = new Date();
-		const minAgeDate = new Date(today);
-		minAgeDate.setFullYear(today.getFullYear() - 18);
-
-		const [day, month, year] = String(birthDate).split("/");
-		const formattedDate = new Date(`${year}-${month}-${day}T00:00:00.000Z`);
-
-		if (formattedDate > today) {
-			throw new ConflictException("birth date cannot be in the future");
-		}
-		if (formattedDate > minAgeDate) {
-			throw new ConflictException("user must be at least 18 years old");
-		}
-
-		if (isNaN(formattedDate.getTime())) {
-			throw new BadRequestException("invalid birthDate format, use DD/MM/YYYY");
-		}
-
-		return formattedDate;
-	}
 
 	async verifyExists(id: string) {
 		const foundId = await this.repository.findById(id);

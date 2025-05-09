@@ -138,10 +138,12 @@ export class User extends BaseEntity {
 		name: string,
 		email: string,
 		password: string,
-		birth_date: Date,
+		birth_date: string,
 		account?: Account,
 	): Promise<User> {
-		const user = new User(id, name, email, password, birth_date, account);
+		const [day, month, year] = birth_date.split("/").map(Number);
+		const formattedDate = new Date(year, month - 1, day);
+		const user = new User(id, name, email, password, formattedDate, account);
 		user.validateName(name);
 		user.validateEmail(email);
 		user.validateBirthDate(birth_date);

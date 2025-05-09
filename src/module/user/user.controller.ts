@@ -11,13 +11,14 @@ import {
 import { CreateUserDto } from "./dto/create.dto";
 import { UpdateUserDto } from "./dto/update.dto";
 import { UserService } from "./user.service";
+import { ResponseUserDto } from "./dto/response.dto";
 
 @Controller("user")
 export class UserController {
 	constructor(private readonly service: UserService) {}
 
 	@Post("create")
-	createUser(@Body() dto: CreateUserDto) {
+	createUser(@Body() dto: CreateUserDto): Promise<ResponseUserDto> {
 		return this.service.createUser(dto);
 	}
 
