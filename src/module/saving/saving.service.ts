@@ -21,8 +21,6 @@ export class SavingService {
 
 		const accountId = userFound?.Account?.id;
 
-		// await this.validator.accountExists(accountId); // PARA UPDATE
-
 		const Saving = new SavingEntity({
 			account_id: accountId,
 			status: SavingStatus.ACTIVE,
