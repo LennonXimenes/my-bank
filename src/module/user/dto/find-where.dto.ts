@@ -1,4 +1,5 @@
-import { IsEmail, IsOptional, IsString } from "class-validator";
+import { UserType } from "@prisma/client";
+import { IsEmail, IsEnum, IsOptional, IsString } from "class-validator";
 
 export class FindWhereDto {
   @IsOptional()
@@ -8,6 +9,18 @@ export class FindWhereDto {
   @IsOptional()
   @IsEmail()
   email?: string;
+
+  @IsOptional()
+  @IsString()
+  cpf?: string;
+
+  @IsOptional()
+  @IsString()
+  cnpj?: string;
+
+  @IsOptional()
+  @IsEnum(UserType)
+  type?: UserType;
 
   @IsOptional()
   @IsString()

@@ -1,5 +1,11 @@
 import { UserType } from "@prisma/client";
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from "class-validator";
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -21,7 +27,7 @@ export class CreateUserDto {
   cnpj?: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsEnum(UserType)
   type: UserType;
 
   @IsNotEmpty()
