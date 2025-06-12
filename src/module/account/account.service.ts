@@ -1,26 +1,35 @@
 import { Injectable } from "@nestjs/common";
-import { AccountRepository } from "./account.repository";
-import { AccountValidator } from "./account.validator";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class AccountService {
-	constructor(
-		private readonly repository: AccountRepository,
-		private readonly validator: AccountValidator,
-	) {}
+  generateCode(): string {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
 
-	async createCheckDigit(code: string) {
-		const codeStr = code;
-		const weights = [2, 3, 4, 5, 6, 7, 8, 9];
-		let sum = 0;
-		let weightIndex = 0;
+  generateAgency(): string {
+    return "0001";
+  }
 
-		for (let i = codeStr?.length - 1; i >= 0; i--) {
-			sum += parseInt(codeStr[i]) * weights[weightIndex];
-			weightIndex = (weightIndex + 1) % weights?.length;
-		}
+  createCheckDigit(code: string): string {
+    const weights = [2, 3, 4, 5, 6, 7, 8, 9];
+    let sum = 0;
+    let weightIndex = 0;
 
-		const remainder = sum % 11;
-		return remainder < 2 ? "0" : (11 - remainder).toString();
-	}
+    for (let i = code.length - 1; i >= 0; i--) {
+      sum += parseInt(code[i]) * weights[weightIndex];
+      weightIndex = (weightIndex + 1) % weights.length;
+    }
+
+    const remainder = sum % 11;
+    return remainder < 2 ? "0" : (11 - remainder).toString();
+  }
+
+  generateInitialBalance(): Prisma.Decimal {
+    return new Prisma.Decimal(0);
+  }
+
+  isJointAccount(): boolean {
+    return false;
+  }
 }

@@ -21,25 +21,24 @@ model Setting {
 
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
-
-  @@map("Setting")
 }
 
 model User {
   id String @id @default(uuid()) @db.Uuid
 
   name       String
-  email      String   @unique
+  cpf        String?   @unique
+  cnpj       String?   @unique
+  type       UserType
+  email      String    @unique
   password   String
-  birth_date DateTime
+  birth_date DateTime?
 
   created_at DateTime  @default(now())
   updated_at DateTime  @default(now())
   deleted_at DateTime?
 
   Account Account?
-
-  @@map("User")
 }
 
 model Account {
@@ -59,8 +58,6 @@ model Account {
 
   User   User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
   Saving Saving?
-
-  @@map("Account")
 }
 
 model Saving {
@@ -76,12 +73,15 @@ model Saving {
   account_id String @unique @db.Uuid
 
   Account Account @relation(fields: [account_id], references: [id])
-
-  @@map("Saving")
 }
 
 enum SavingStatus {
   ACTIVE
   CLOSED
   SUSPENDED
+}
+
+enum UserType {
+  PF
+  PJ
 }

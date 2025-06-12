@@ -1,15 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import Decimal from "decimal.js";
-import { sanitize } from "src/common/helpers/sanitize";
-import { AccountEntity } from "../account/account.entity";
 import { AccountRepository } from "../account/account.repository";
 import { AccountService } from "../account/account.service";
-import { CreateUserDto } from "./dto/create.dto";
 import { UpdateUserDto } from "./dto/update.dto";
 import { UserRepository } from "./user.repository";
 import { UserValidator } from "./user.validator";
-import { ResponseUserDto } from "./dto/response.dto";
-
 @Injectable()
 export class UserService {
   constructor(
@@ -19,12 +13,7 @@ export class UserService {
     private readonly accountRepository: AccountRepository,
   ) {}
 
-  async createUser(dto: CreateUserDto): Promise<ResponseUserDto> {
-    await this.validator.validateEmail(dto.email);
-
-    return;
-  }
-
+  // TODO REFAZER TODO O RESTO!
   async updateUser(id: string, dto: UpdateUserDto): Promise<any> {
     return;
   }
@@ -36,8 +25,9 @@ export class UserService {
   }
 
   async findAll(): Promise<any> {
-    const users = await this.repository.findAll();
+    // const users = await this.repository.findAll();
 
-    return sanitize(users);
+    // return sanitize(users);
+    return;
   }
 }
