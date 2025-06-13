@@ -17,8 +17,8 @@ export class CreateUserWithAccountService {
     private readonly accountService: AccountService,
   ) {}
 
-  async execute(data: CreateUserDto): Promise<ResponseUserDto> {
-    await this.validator.verifyEmailAlreadyUsed(data.email);
+  async execute(body: CreateUserDto): Promise<ResponseUserDto> {
+    await this.validator.verifyEmailAlreadyUsed(body.email);
 
     const code = this.accountService.generateCode();
 
@@ -31,16 +31,16 @@ export class CreateUserWithAccountService {
     });
 
     const user = await User.create({
-      name: data.name,
-      email: data.email,
-      password: data.password,
-      birth_date: data.birth_date,
-      cpf: data.cpf,
-      cnpj: data.cnpj,
-      type: data.type,
+      name: body.name,
+      email: body.email,
+      password: body.password,
+      birth_date: body.birth_date,
+      cpf: body.cpf,
+      cnpj: body.cnpj,
+      type: body.type,
       account,
     });
 
-    return await this.repository.createUser(user, account);
+    return await this.repository.create(user, account);
   }
 }

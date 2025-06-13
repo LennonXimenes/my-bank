@@ -11,7 +11,7 @@ import { User as PrismaUser } from "@prisma/client";
 export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createUser(user: User, account: Account): Promise<ResponseUserDto> {
+  async create(user: User, account: Account): Promise<ResponseUserDto> {
     return await this.prisma.$transaction(async (tx) => {
       const userDb = await tx.user.create({
         data: {
@@ -58,7 +58,7 @@ export class UserRepository {
     });
   }
 
-  async updateUser(id: string, dto: UpdateUserDto): Promise<ResponseUserDto> {
+  async update(id: string, dto: UpdateUserDto): Promise<ResponseUserDto> {
     // const user = await this.prisma.user.update({
     //   where: { id },
     //   data: dto,
@@ -68,7 +68,7 @@ export class UserRepository {
     return;
   }
 
-  async deleteUser(id: string): Promise<ResponseUserDto> {
+  async delete(id: string): Promise<ResponseUserDto> {
     // const user = await this.prisma.user.delete({ where: { id } });
     // return new ResponseUserDto(user);
     return;

@@ -4,6 +4,8 @@ import { AccountService } from "../account/account.service";
 import { UpdateUserDto } from "./dto/update.dto";
 import { UserRepository } from "./user.repository";
 import { UserValidator } from "./user.validator";
+import { ResponseUserDto } from "./dto/response.dto";
+import { User } from "./user.entity";
 @Injectable()
 export class UserService {
   constructor(
@@ -13,15 +15,17 @@ export class UserService {
     private readonly accountRepository: AccountRepository,
   ) {}
 
-  // TODO REFAZER TODO O RESTO!
-  async updateUser(id: string, dto: UpdateUserDto): Promise<any> {
+  async update(id: string, body: UpdateUserDto): Promise<ResponseUserDto> {
+    const foundUser = this.validator.verifyExists(id);
+
     return;
   }
 
-  async deleteUser(id: string): Promise<any> {
+  // TODO REFAZER TODO O RESTO!
+  async delete(id: string): Promise<any> {
     await this.validator.verifyExists(id);
 
-    return await this.repository.deleteUser(id);
+    return await this.repository.delete(id);
   }
 
   async findAll(): Promise<any> {

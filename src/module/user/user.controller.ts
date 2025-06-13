@@ -26,17 +26,17 @@ export class UserController {
     return await this.createUserWithAccountService.execute(body);
   }
 
-  @Patch("update/:id") //TODO remover seguir o REST
-  updateUser(
+  @Patch(":id")
+  update(
     @Param("id", ParseUUIDPipe) id: string,
-    @Body() dto: UpdateUserDto,
-  ): Promise<any> {
-    return this.service.updateUser(id, dto);
+    @Body() body: UpdateUserDto,
+  ): Promise<ResponseUserDto> {
+    return this.service.update(id, body);
   }
 
-  @Delete("delete/:id") //TODO remover seguir o REST
+  @Delete(":id") //TODO remover seguir o REST
   deleteUser(@Param("id", ParseUUIDPipe) id: string): Promise<any> {
-    return this.service.deleteUser(id);
+    return this.service.delete(id);
   }
 
   @Get("find") //TODO remover seguir o REST

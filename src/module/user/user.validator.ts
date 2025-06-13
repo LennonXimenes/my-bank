@@ -3,15 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { PrismaService } from "../../prisma/prisma.service";
 import { UserRepository } from "./user.repository";
 
 @Injectable()
 export class UserValidator {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly repository: UserRepository,
-  ) {}
+  constructor(private readonly repository: UserRepository) {}
 
   async verifyExists(id: string): Promise<any> {
     const foundId = await this.repository.findById(id);
@@ -28,20 +24,6 @@ export class UserValidator {
     if (foundEmail) {
       throw new ConflictException("Email already in use");
     }
-  }
-
-  async verifyEmailExists(email: string, id?: string): Promise<any> {
-    // const foundEmail = await this.repository.findByEmail(email);
-    // if (!foundEmail && id) {
-    //   console.log(foundEmail);
-    //   throw new NotFoundException("invalid credentials");
-    // }
-    // if (foundEmail?.id != id) {
-    //   console.log(foundEmail);
-    //   throw new ConflictException("email already exists");
-    // }
-    // return foundEmail;
-    return;
   }
 
   async verifyUserAccount(id: string): Promise<any> {
